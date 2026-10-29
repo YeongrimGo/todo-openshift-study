@@ -1,115 +1,7 @@
-﻿kind: Deployment
+kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: redis-db
-  namespace: yeongrimgo1106-dev
-  uid: 210934ce-f653-4bb0-aad2-cc89bb4694a6
-  resourceVersion: '8893512288'
-  generation: 3
-  creationTimestamp: '2026-10-29T12:25:14Z'
-  annotations:
-    deployment.kubernetes.io/revision: '3'
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: apps/v1
-      time: '2026-10-29T13:20:34Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:spec':
-          'f:progressDeadlineSeconds': {}
-          'f:replicas': {}
-          'f:revisionHistoryLimit': {}
-          'f:selector': {}
-          'f:strategy':
-            'f:rollingUpdate':
-              .: {}
-              'f:maxSurge': {}
-              'f:maxUnavailable': {}
-            'f:type': {}
-          'f:template':
-            'f:metadata':
-              'f:labels':
-                .: {}
-                'f:app': {}
-            'f:spec':
-              'f:containers':
-                'k:{"name":"redis"}':
-                  'f:image': {}
-                  'f:volumeMounts':
-                    .: {}
-                    'k:{"mountPath":"/var/lib/redis/data"}':
-                      .: {}
-                      'f:mountPath': {}
-                      'f:name': {}
-                  'f:terminationMessagePolicy': {}
-                  .: {}
-                  'f:resources': {}
-                  'f:env':
-                    .: {}
-                    'k:{"name":"REDIS_PASSWORD"}':
-                      .: {}
-                      'f:name': {}
-                      'f:valueFrom':
-                        .: {}
-                        'f:secretKeyRef': {}
-                  'f:terminationMessagePath': {}
-                  'f:imagePullPolicy': {}
-                  'f:ports':
-                    .: {}
-                    'k:{"containerPort":6379,"protocol":"TCP"}':
-                      .: {}
-                      'f:containerPort': {}
-                      'f:protocol': {}
-                  'f:name': {}
-              'f:dnsPolicy': {}
-              'f:restartPolicy': {}
-              'f:schedulerName': {}
-              'f:securityContext': {}
-              'f:terminationGracePeriodSeconds': {}
-              'f:volumes':
-                .: {}
-                'k:{"name":"redis-data"}':
-                  .: {}
-                  'f:name': {}
-                  'f:persistentVolumeClaim':
-                    .: {}
-                    'f:claimName': {}
-    - manager: kube-controller-manager
-      operation: Update
-      apiVersion: apps/v1
-      time: '2026-10-29T13:33:01Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:metadata':
-          'f:annotations':
-            .: {}
-            'f:deployment.kubernetes.io/revision': {}
-        'f:status':
-          'f:availableReplicas': {}
-          'f:conditions':
-            .: {}
-            'k:{"type":"Available"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:lastUpdateTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-            'k:{"type":"Progressing"}':
-              .: {}
-              'f:lastTransitionTime': {}
-              'f:lastUpdateTime': {}
-              'f:message': {}
-              'f:reason': {}
-              'f:status': {}
-              'f:type': {}
-          'f:observedGeneration': {}
-          'f:readyReplicas': {}
-          'f:replicas': {}
-          'f:updatedReplicas': {}
-      subresource: status
 spec:
   replicas: 1
   selector:
@@ -125,52 +17,17 @@ spec:
           persistentVolumeClaim:
             claimName: redis-pvc
       containers:
-        - resources: {}
-          terminationMessagePath: /dev/termination-log
-          name: redis
+        - name: redis
+          image: 'registry.redhat.io/rhel9/redis-7:9.8-1793253232'
+          ports:
+            - containerPort: 6379
+              protocol: TCP
           env:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: todo-secret
                   key: REDIS_PASSWORD
-          ports:
-            - containerPort: 6379
-              protocol: TCP
-          imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: redis-data
               mountPath: /var/lib/redis/data
-          terminationMessagePolicy: File
-          image: 'registry.redhat.io/rhel9/redis-7:9.8-1793253232'
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 30
-      dnsPolicy: ClusterFirst
-      securityContext: {}
-      schedulerName: default-scheduler
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 25%
-      maxSurge: 25%
-  revisionHistoryLimit: 10
-  progressDeadlineSeconds: 600
-status:
-  observedGeneration: 3
-  replicas: 1
-  updatedReplicas: 1
-  readyReplicas: 1
-  availableReplicas: 1
-  conditions:
-    - type: Available
-      status: 'True'
-      lastUpdateTime: '2026-10-29T12:25:29Z'
-      lastTransitionTime: '2026-10-29T12:25:29Z'
-      reason: MinimumReplicasAvailable
-      message: Deployment has minimum availability.
-    - type: Progressing
-      status: 'True'
-      lastUpdateTime: '2026-10-29T13:33:01Z'
-      lastTransitionTime: '2026-10-29T13:33:01Z'
-      reason: NewReplicaSetAvailable
-      message: ReplicaSet "redis-db-7cdc84d4b8" has successfully progressed.

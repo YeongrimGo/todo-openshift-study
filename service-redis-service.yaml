@@ -1,45 +1,12 @@
-﻿kind: Service
+kind: Service
 apiVersion: v1
 metadata:
   name: redis-service
-  namespace: yeongrimgo1106-dev
-  uid: 8a4c2507-00d2-44fe-abb2-c6e81717c274
-  resourceVersion: '8893316314'
-  creationTimestamp: '2026-10-29T12:34:50Z'
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: v1
-      time: '2026-10-29T12:34:50Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:spec':
-          'f:internalTrafficPolicy': {}
-          'f:ports':
-            .: {}
-            'k:{"port":6379,"protocol":"TCP"}':
-              .: {}
-              'f:port': {}
-              'f:protocol': {}
-              'f:targetPort': {}
-          'f:selector': {}
-          'f:sessionAffinity': {}
-          'f:type': {}
 spec:
-  clusterIP: 172.30.193.159
-  ipFamilies:
-    - IPv4
   ports:
     - protocol: TCP
       port: 6379
       targetPort: 6379
-  internalTrafficPolicy: Cluster
-  clusterIPs:
-    - 172.30.193.159
-  type: ClusterIP
-  ipFamilyPolicy: SingleStack
-  sessionAffinity: None
   selector:
     app: redis-db
-status:
-  loadBalancer: {}
+  type: ClusterIP

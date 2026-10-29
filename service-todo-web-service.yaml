@@ -1,45 +1,12 @@
-﻿kind: Service
+kind: Service
 apiVersion: v1
 metadata:
   name: todo-web-service
-  namespace: yeongrimgo1106-dev
-  uid: a1adfea5-ba7a-4c30-ba57-5f381ed37dff
-  resourceVersion: '8893318261'
-  creationTimestamp: '2026-10-29T12:35:20Z'
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: v1
-      time: '2026-10-29T12:35:20Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:spec':
-          'f:internalTrafficPolicy': {}
-          'f:ports':
-            .: {}
-            'k:{"port":8080,"protocol":"TCP"}':
-              .: {}
-              'f:port': {}
-              'f:protocol': {}
-              'f:targetPort': {}
-          'f:selector': {}
-          'f:sessionAffinity': {}
-          'f:type': {}
 spec:
-  clusterIP: 172.30.216.35
-  ipFamilies:
-    - IPv4
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-  internalTrafficPolicy: Cluster
-  clusterIPs:
-    - 172.30.216.35
-  type: ClusterIP
-  ipFamilyPolicy: SingleStack
-  sessionAffinity: None
   selector:
     app: todo-web
-status:
-  loadBalancer: {}
+  type: ClusterIP

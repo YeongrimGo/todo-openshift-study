@@ -1,24 +1,7 @@
-﻿kind: ConfigMap
+kind: ConfigMap
 apiVersion: v1
 metadata:
   name: todo-app-config
-  namespace: yeongrimgo1106-dev
-  uid: 42cfbd32-2572-4823-a32b-06c39e1d0e1f
-  resourceVersion: '8893264954'
-  creationTimestamp: '2026-10-29T12:19:26Z'
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: v1
-      time: '2026-10-29T12:19:26Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:data':
-          .: {}
-          'f:APP_TITLE': {}
-          'f:app.py': {}
-        'f:immutable': {}
-immutable: false
 data:
   APP_TITLE: 일정 관리 메모장
   app.py: "import os\r\nfrom flask import Flask, request, redirect, render_template_string\r\nimport redis\r\n\r\napp = Flask(__name__)\r\nr = redis.Redis(\r\n    host=os.environ.get(\"REDIS_HOST\", \"redis-service\"),\r\n    port=6379,\r\n    password=os.environ.get(\"REDIS_PASSWORD\", \"\"),\r\n    decode_responses=True,\r\n)\r\nTITLE = os.environ.get(\"APP_TITLE\", \"나의 일정 관리\")\r\nADMIN_PIN = os.environ.get(\"ADMIN_PIN\", \"1234\")\r\n\r\nHTML = \"\"\"\r\n<!doctype html>\r\n<html>\r\n<head><meta charset=\"utf-8\"><title>{{ title }}</title></head>\r\n<body style=\"font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px;\">\r\n  <h2>{{ title }}</h2>\r\n  <form method=\"POST\" action=\"/add\" style=\"margin-bottom: 20px;\">\r\n    <input type=\"date\" name=\"date\" required>\r\n    <input type=\"text\" name=\"task\" placeholder=\"할 일을 입력하세요\" required style=\"width: 250px;\">\r\n    <input type=\"password\" name=\"pin\" placeholder=\"PIN(1234)\" required style=\"width: 80px;\">\r\n    <button type=\"submit\">추가</button>\r\n  </form>\r\n  <ul>\r\n    {% for item in todos %}\r\n      <li style=\"margin: 8px 0;\">{{ item }}</li>\r\n    {% else %}\r\n      <li>등록된 일정이 없습니다.</li>\r\n    {% endfor %}\r\n  </ul>\r\n</body>\r\n</html>\r\n\"\"\"\r\n\r\n\r\n@app.route(\"/\")\r\ndef index():\r\n    todos = r.lrange(\"todos\", 0, -1)\r\n    return render_template_string(HTML, title=TITLE, todos=todos)\r\n\r\n\r\n@app.route(\"/add\", methods=[\"POST\"])\r\ndef add():\r\n    if request.form.get(\"pin\") == ADMIN_PIN:\r\n        entry = f\"[{request.form.get('date')}] {request.form.get('task')}\"\r\n        r.lpush(\"todos\", entry)\r\n    return redirect(\"/\")\r\n\r\n\r\n@app.route(\"/healthz\")\r\ndef healthz():\r\n    return \"OK\", 200\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    app.run(host=\"0.0.0.0\", port=8080)\r\n"

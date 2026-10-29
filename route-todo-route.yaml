@@ -1,44 +1,8 @@
-﻿kind: Route
+kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: todo-route
-  namespace: yeongrimgo1106-dev
-  uid: f918b8dc-ab5e-4080-97c4-07337a77da61
-  resourceVersion: '8893444072'
-  generation: 1
-  creationTimestamp: '2026-10-29T13:13:15Z'
-  annotations:
-    openshift.io/host.generated: 'true'
-  managedFields:
-    - manager: Mozilla
-      operation: Update
-      apiVersion: route.openshift.io/v1
-      time: '2026-10-29T13:13:15Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:spec':
-          'f:port':
-            .: {}
-            'f:targetPort': {}
-          'f:tls':
-            .: {}
-            'f:termination': {}
-          'f:to':
-            'f:kind': {}
-            'f:name': {}
-            'f:weight': {}
-          'f:wildcardPolicy': {}
-    - manager: openshift-router
-      operation: Update
-      apiVersion: route.openshift.io/v1
-      time: '2026-10-29T13:13:15Z'
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:status':
-          'f:ingress': {}
-      subresource: status
 spec:
-  host: todo-route-yeongrimgo1106-dev.apps.rm3.7wse.p1.openshiftapps.com
   to:
     kind: Service
     name: todo-web-service
@@ -48,13 +12,3 @@ spec:
   tls:
     termination: edge
   wildcardPolicy: None
-status:
-  ingress:
-    - host: todo-route-yeongrimgo1106-dev.apps.rm3.7wse.p1.openshiftapps.com
-      routerName: default
-      conditions:
-        - type: Admitted
-          status: 'True'
-          lastTransitionTime: '2026-10-29T13:13:15Z'
-      wildcardPolicy: None
-      routerCanonicalHostname: router-default.apps.rm3.7wse.p1.openshiftapps.com
