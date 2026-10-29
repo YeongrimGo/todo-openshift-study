@@ -1,0 +1,70 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: todo-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-web
+  template:
+    metadata:
+      labels:
+        app: todo-web
+    spec:
+      volumes:
+        - name: app-code
+          configMap:
+            name: todo-app-config
+      containers:
+        - name: web
+          image: 'registry.redhat.io/ubi9/python-312:9.8-1793254183'
+          command:
+            - /bin/sh
+            - '-c'
+          args:
+            - pip install flask redis && python /app/app.py
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: REDIS_HOST
+              value: redis-service
+            - name: APP_TITLE
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: APP_TITLE
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todo-secret
+                  key: REDIS_PASSWORD
+            - name: ADMIN_PIN
+              valueFrom:
+                secretKeyRef:
+                  name: todo-secret
+                  key: ADMIN_PIN
+          volumeMounts:
+            - name: app-code
+              mountPath: /app
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
